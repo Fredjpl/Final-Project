@@ -51,7 +51,7 @@ class LazyLoadDataset(Dataset):
   def __len__(self):
     return len(self.data)
 
-train_dataset = LazyLoadDataset("./lazydata/",train = True, transform = transforms.Compose([transforms.ToTensor()]))
+train_dataset = LazyLoadDataset("./lazydata/",train = True, transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean = [0.435, 0.462, 0.485], std = [0.236, 0.221, 0.223] )]))
 
 (img0, img1, img2, depth, field_id), Y = train_dataset[0]
 
@@ -447,7 +447,7 @@ class LazyLoadTestDataset(Dataset):
   def __len__(self):
     return len(self.data)
 
-test_dataset = LazyLoadTestDataset("./lazydata/", transform = transforms.Compose([transforms.ToTensor()]))
+test_dataset = LazyLoadTestDataset("./lazydata/", transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean = [0.435, 0.462, 0.485], std = [0.236, 0.221, 0.223] )]))
 
 test_dataloader = DataLoader(test_dataset, batch_size = 64)
 
