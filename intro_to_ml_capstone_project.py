@@ -51,6 +51,8 @@ class LazyLoadDataset(Dataset):
   def __len__(self):
     return len(self.data)
   
+data = LazyLoadDataset("./lazydata/", train = True, transform = transforms.Compose([transforms.ToTensor()]))
+  
 means = torch.rand_like(torch.tensor([0, 0, 0]), dtype=torch.float)
 stds = torch.rand_like(torch.tensor([0, 0, 0]), dtype=torch.float)
 
