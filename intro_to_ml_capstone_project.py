@@ -464,9 +464,7 @@ preds = []
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-test_data = torch.load('./test/test/testX.pt')
-file_ids = test_data[-1]
-rgb_data = test_data[0]
+file_ids = []
 
 model.eval()
 
@@ -504,6 +502,7 @@ for batch, X in enumerate(test_dataloader):
 
         for i in range(output.shape[0]):
           preds.append(output[i].cpu().detach().numpy())
+          file_ids.append(field_id[i])
 
 df = pd.concat([pd.DataFrame(file_ids), pd.DataFrame.from_records(preds)], axis = 1, names = titles)
 df.columns = titles
