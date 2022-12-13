@@ -50,8 +50,36 @@ class LazyLoadDataset(Dataset):
 
   def __len__(self):
     return len(self.data)
+  
+means = torch.rand_like(torch.tensor([0, 0, 0]), dtype=torch.float)
+stds = torch.rand_like(torch.tensor([0, 0, 0]), dtype=torch.float)
 
-train_dataset = LazyLoadDataset("./lazydata/",train = True, transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean = [0.435, 0.462, 0.485], std = [0.236, 0.221, 0.223] )]))
+
+for x, y in data:
+  img0, img1, img2, depth, field_id = x
+
+  img0_mean = img0.reshape(3, -1).mean(axis=1)
+  img1_mean = img1.reshape(3, -1).mean(axis=1)
+  img2_mean = img2.reshape(3, -1).mean(axis=1)
+
+  img0_std = img0.reshape(3, -1).std(axis=1)
+  img1_std = img1.reshape(3, -1).std(axis=1)
+  img2_std = img2.reshape(3, -1).std(axis=1)
+
+  img_mean = (img0_mean + img1_mean + img2_mean) / 3
+  img_std = (img0_std + img1_std + img2_std) / 3
+  
+  means += img_mean
+  stds += img_std 
+
+
+means = means / len(data.data)
+stds = stds / len(data.data)
+
+print(means)
+print(stds)
+
+train_dataset = LazyLoadDataset("./lazydata/",train = True, transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean = means, std = stds)]))
 
 (img0, img1, img2, depth, field_id), Y = train_dataset[0]
 
